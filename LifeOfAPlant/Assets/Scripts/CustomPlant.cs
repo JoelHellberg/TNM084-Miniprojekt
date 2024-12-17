@@ -190,7 +190,7 @@ public class CustomPlant : MonoBehaviour
 
         /* {{ Add branches on branches }} */
         int parentIndex = 1;
-        for (int i = 0; i < 15; i++)
+        for (int i = 0; i < 30; i++)
         {
             createBranch(parentIndex);
             if (branches[parentIndex].getChildrenAmount() > 3) { parentIndex++; }
@@ -225,7 +225,7 @@ public class CustomPlant : MonoBehaviour
         leafDummy.rotateBranch(angle);
 
         float scale = UnityEngine.Random.Range(scaleMin, scaleMax);
-        leafDummy.scaleBranch(0.2f);
+        leafDummy.scaleBranch(0.2f * branches[0].getScale());
 
         positionBranchOnRoot(leafDummy);
         leafs2.Add(leafDummy);
@@ -275,7 +275,7 @@ public class CustomPlant : MonoBehaviour
             int parentIndex = branches[i].parentIndex;
 
             scale = UnityEngine.Random.Range(scaleMin, scaleMax);
-            if (parentIndex > 0) { scale *= 0.8f *branches[parentIndex].getScale(); }
+            if (parentIndex > 0) { scale *= 0.6f *branches[parentIndex].getScale(); }
             branches[i].scaleBranch(scale);
 
             float angle = UnityEngine.Random.Range(rotationMin, rotationMax);

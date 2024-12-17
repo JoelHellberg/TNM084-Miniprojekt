@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1776,7 +1776,7 @@ MonoBehaviour:
   pot: {fileID: 473443335}
   stemPrefab: {fileID: 7139241531217849928, guid: 392215b6d8e443f41b128facf1e77ff0, type: 3}
   branchPrefab: {fileID: 4039941718830027394, guid: 4455c01158e36a34b9d27e5bcdba4df2, type: 3}
-  leafPrefab: {fileID: 8164386332211166444, guid: 255f240fdcde48243bf1c65b75d075e2, type: 3}
+  leafPrefab: {fileID: 6708767471644972575, guid: d009e567d1a1eeb4cb1c869f38a2ad8e, type: 3}
   daysLivedSlider: {fileID: 1214401229}
   waterSlider: {fileID: 1000139665}
 --- !u!65 &1608449597
