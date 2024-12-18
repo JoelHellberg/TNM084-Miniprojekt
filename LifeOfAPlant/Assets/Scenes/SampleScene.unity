@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1556,6 +1556,7 @@ GameObject:
   - component: {fileID: 1570724251}
   - component: {fileID: 1570724250}
   - component: {fileID: 1570724249}
+  - component: {fileID: 1570724253}
   m_Layer: 0
   m_Name: Terrain
   m_TagString: Untagged
@@ -1575,7 +1576,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f30633c0b6c152a4eb4e2e4b4e41db6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scale: 5
+  waterSlider: {fileID: 1000139665}
+  daysWithoutWater: 0
   depth: 5
   width: 32
   height: 32
@@ -1653,6 +1655,14 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &1570724253
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1570724248}
+  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1602738237
 GameObject:
   m_ObjectHideFlags: 0
