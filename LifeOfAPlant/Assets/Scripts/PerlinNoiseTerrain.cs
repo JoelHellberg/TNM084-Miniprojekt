@@ -16,6 +16,8 @@ public class PerlinNoiseTerrain : MonoBehaviour
 
     public float depth = 20;
 
+    public float scaleFactor = 0.2f; // Lägre värden minskar höjden
+
     public int width = 50;
     public int height = 50;
 
@@ -90,12 +92,28 @@ public class PerlinNoiseTerrain : MonoBehaviour
 
     float CalculateHeight(int x, int y)
     {
-        float xCoord = (float) x / width * daysWithoutWater/10;
-        float yCoord = (float) y / height * daysWithoutWater/10;
+        float total = 0;
+        float amplitude = 1;
+        float frequency = daysWithoutWater/50f;
+        int octaves = 4; // Antal lager av Perlin Noise
+        float persistence = 0.5f; // Hur mycket varje lager bidrar
 
-        //Do our own perlinnoise later
-        return CalculatePerlinNoise(xCoord, yCoord);
+        for (int i = 0; i < octaves; i++)
+        {
+            float xCoord = (float)x / width * frequency;
+            float yCoord = (float)y / height * frequency;
+
+            // Lägg till varje lager av Perlin Noise
+            total += CalculatePerlinNoise(xCoord, yCoord) * amplitude;
+
+            amplitude *= persistence; // Minskande bidrag för varje lager
+            frequency *= 2;           // Dubblar frekvensen för varje lager
+        }
+
+        // Normalisera värdet och justera skalan
+        return Mathf.Clamp(total, 0f, 1f) * scaleFactor;
     }
+
 
 
     float CalculatePerlinNoise(float x, float y)
@@ -149,7 +167,7 @@ public class PerlinNoiseTerrain : MonoBehaviour
         // Interpolera resultaten från varje hörn
         float x1 = Mathf.Lerp(Grad(aa, xf, yf), Grad(ba, xf - 1, yf), u);
         float x2 = Mathf.Lerp(Grad(ab, xf, yf - 1), Grad(bb, xf - 1, yf - 1), u);
-        return Mathf.Lerp(x1, x2, v);
+        return Mathf.Clamp(Mathf.Lerp(x1, x2, v), 0f, 1f);
 
 
     }
