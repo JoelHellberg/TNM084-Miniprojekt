@@ -18,6 +18,11 @@ public class PerlinNoiseTerrain : MonoBehaviour
 
     public float scaleFactor = 0.2f; // Lägre värden minskar höjden
 
+    public Material material;
+
+    public float metallicValue = 0.1f;
+
+
     public int width = 50;
     public int height = 50;
 
@@ -37,6 +42,8 @@ public class PerlinNoiseTerrain : MonoBehaviour
         {
             Debug.LogError("WaterSlider is not assigned in the Inspector!");
         }
+
+        Debug.Log("Metallic Value: " + metallicValue);
     }
 
     //Update real-time
@@ -52,8 +59,25 @@ public class PerlinNoiseTerrain : MonoBehaviour
         if (waterSlider != null)
         {
             daysWithoutWater = waterSlider.value;
-            Debug.Log("Current Watercounter: " + daysWithoutWater);
+           // Debug.Log("Current Watercounter: " + daysWithoutWater);
         }
+
+
+        //0->Ljus
+        //1->Mörkt
+        if (daysWithoutWater <= 0)
+        {
+            material.SetFloat("_Metallic", metallicValue);
+        }
+        else
+        {
+            float adjustedValue = metallicValue / (daysWithoutWater/30); // Mjukare skalning
+            adjustedValue = Mathf.Clamp(adjustedValue, 0.05f, 2f); // Begränsar värdet mellan 0.1 och 1
+            material.SetFloat("_Metallic", adjustedValue);
+        }
+
+        Debug.Log("Metallic Value: " + metallicValue);
+
     }
 
     TerrainData GenerateTerrain(TerrainData terrainData)
