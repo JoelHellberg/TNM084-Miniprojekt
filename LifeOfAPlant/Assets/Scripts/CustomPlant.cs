@@ -21,7 +21,7 @@ class Branch : MonoBehaviour
             posOnparent = UnityEngine.Random.Range(0.2f, 1.0f);
         }
         else { 
-            posOnparent = UnityEngine.Random.Range(0.6f, 1.0f);
+            posOnparent = UnityEngine.Random.Range(0.2f, 1.0f);
         }
 
         // Generate a random value of 0 to 360 for the yAxis
@@ -190,10 +190,10 @@ public class CustomPlant : MonoBehaviour
 
         /* {{ Add branches on branches }} */
         int parentIndex = 1;
-        for (int i = 0; i < 30; i++)
+        for (int i = 0; i < 10; i++)
         {
             createBranch(parentIndex);
-            if (branches[parentIndex].getChildrenAmount() > 3) { parentIndex++; }
+            if (branches[parentIndex].getChildrenAmount() > 2) { parentIndex++; }
         }
 
         applyLeafs();
@@ -214,21 +214,6 @@ public class CustomPlant : MonoBehaviour
 
         positionBranchOnRoot(branchDummy);
         branches.Add(branchDummy);
-    }
-
-    private void createLeaf(int parentIndex)
-    {
-        GameObject branchObj = Instantiate(leafPrefab);
-        Branch leafDummy = new Branch(branchObj, parentIndex, "leaf");
-
-        float angle = UnityEngine.Random.Range(rotationMin, rotationMax);
-        leafDummy.rotateBranch(angle);
-
-        float scale = UnityEngine.Random.Range(scaleMin, scaleMax);
-        leafDummy.scaleBranch(0.2f * branches[0].getScale());
-
-        positionBranchOnRoot(leafDummy);
-        leafs2.Add(leafDummy);
     }
 
     private void positionBranchOnRoot(Branch branch)
@@ -290,37 +275,29 @@ public class CustomPlant : MonoBehaviour
 
     private void applyLeafs()
     {
-        foreach (Branch leaf in leafs2)
-        {
-            leaf.Remove();
-        }
-        for (int i = 1; i < branches.Count; i++)
-        {
-            for (int j = 0; j < 5 * (branches[i].getChildrenAmount() * 2 + 1); j++)
-            {
-                createLeaf(i);
-            }
-        }
-        /*foreach (GameObject leaf in leafs)
+        foreach (GameObject leaf in leafs)
         {
             Destroy(leaf);
         }
+        int leavesPerBranch = 5;
         for (int i = 1; i < branches.Count; i++)
         {
-            if (branches[i].getChildrenAmount() == 0)
-            {
-                GameObject leafObj = Instantiate(leafPrefab);
-                leafObj.transform.localScale = leafObj.transform.localScale * branches[i].getScale();
-                leafObj.transform.position = branches[i].getTopPos();
-                leafObj.transform.Rotate(branches[i].rotation);
-                leafs.Add(leafObj);
-            }
+
+                for(int j = 0; j < leavesPerBranch; j++) {
+                    float degreesToIncrease = 360 / leavesPerBranch;
+                    GameObject leafObj = Instantiate(leafPrefab);
+                    Vector3 rotation = new Vector3(0.0f, degreesToIncrease * j, 0.0f); // In degrees
+                    leafObj.transform.Rotate(rotation);
+                    leafObj.transform.localScale = leafObj.transform.localScale * branches[i].getScale();
+                    leafObj.transform.Rotate(branches[i].rotation);
+                    leafObj.transform.position = branches[i].getTopPos();
+                    leafs.Add(leafObj);
+                }
         }
-        */
+        
     }
 
     private List<Branch> branches = new List<Branch>();
-    private List<Branch> leafs2 = new List<Branch>();
 
     private List<GameObject> leafs = new List<GameObject>();
 
