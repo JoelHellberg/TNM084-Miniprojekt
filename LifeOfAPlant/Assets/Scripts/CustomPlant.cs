@@ -16,13 +16,7 @@ class Branch : MonoBehaviour
         parentIndex = parentPos_in;
 
         // Randomize how high upon the parent the branch should stem
-        if(branchType == "leaf")
-        {
-            posOnparent = UnityEngine.Random.Range(0.2f, 1.0f);
-        }
-        else { 
-            posOnparent = UnityEngine.Random.Range(0.2f, 1.0f);
-        }
+        posOnparent = UnityEngine.Random.Range(0.2f, 0.9f);
 
         // Generate a random value of 0 to 360 for the yAxis
         float randomYValue = UnityEngine.Random.Range(0f, 360f);
@@ -190,10 +184,10 @@ public class CustomPlant : MonoBehaviour
 
         /* {{ Add branches on branches }} */
         int parentIndex = 1;
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 2; i++)
         {
             createBranch(parentIndex);
-            if (branches[parentIndex].getChildrenAmount() > 2) { parentIndex++; }
+            if (branches[parentIndex].getChildrenAmount() > 1) { parentIndex++; }
         }
 
         applyLeafs();
@@ -279,17 +273,27 @@ public class CustomPlant : MonoBehaviour
         {
             Destroy(leaf);
         }
-        int leavesPerBranch = 5;
-        for (int i = 1; i < branches.Count; i++)
+        for (int i = 0; i < branches.Count; i++)
         {
-
-                for(int j = 0; j < leavesPerBranch; j++) {
+            int leavesPerBranch = UnityEngine.Random.Range(5, 8);
+            for (int j = 0; j < leavesPerBranch; j++) {
                     float degreesToIncrease = 360 / leavesPerBranch;
                     GameObject leafObj = Instantiate(leafPrefab);
-                    Vector3 rotation = new Vector3(0.0f, degreesToIncrease * j, 0.0f); // In degrees
-                    leafObj.transform.Rotate(rotation);
                     leafObj.transform.localScale = leafObj.transform.localScale * branches[i].getScale();
-                    leafObj.transform.Rotate(branches[i].rotation);
+
+                    // Define the two rotation vectors
+                    Vector3 angleOfLeaf = new Vector3(0.0f, degreesToIncrease * j, 0.0f); // In degrees
+                    Vector3 angleOfBranch = branches[i].rotation;
+
+                    // Apply the angle of the branch on the angle of the Leaf
+                    Quaternion combinedRotation = Quaternion.Euler(angleOfLeaf) * Quaternion.Euler(angleOfBranch);
+
+                    // Get the resulting rotation as a vector (if needed)
+                    Vector3 resultEulerAngles = combinedRotation.eulerAngles;
+
+                    leafObj.transform.Rotate(angleOfBranch);
+                    leafObj.transform.Rotate(resultEulerAngles);
+
                     leafObj.transform.position = branches[i].getTopPos();
                     leafs.Add(leafObj);
                 }
