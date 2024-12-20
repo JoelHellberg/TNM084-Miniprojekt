@@ -277,12 +277,19 @@ public class CustomPlant : MonoBehaviour
         {
             int leavesPerBranch = UnityEngine.Random.Range(5, 8);
             for (int j = 0; j < leavesPerBranch; j++) {
+                    
                     float degreesToIncrease = 360 / leavesPerBranch;
                     GameObject leafObj = Instantiate(leafPrefab);
-                    leafObj.transform.localScale = leafObj.transform.localScale * branches[i].getScale();
+                    Vector3 currentScale = leafObj.transform.localScale;
+                    float branchScale = branches[i].getScale();
+                    leafObj.transform.localScale = new Vector3(
+                        currentScale.x * branchScale * UnityEngine.Random.Range(1.0f, 1.2f),
+                        currentScale.y * branchScale,
+                        currentScale.z * branchScale * UnityEngine.Random.Range(0.8f, 1.0f)
+                    );
 
-                    // Define the two rotation vectors
-                    Vector3 angleOfLeaf = new Vector3(0.0f, degreesToIncrease * j, 0.0f); // In degrees
+                // Define the two rotation vectors
+                Vector3 angleOfLeaf = new Vector3(0.0f, degreesToIncrease * j, 0.0f); // In degrees
                     Vector3 angleOfBranch = branches[i].rotation;
 
                     // Apply the angle of the branch on the angle of the Leaf
