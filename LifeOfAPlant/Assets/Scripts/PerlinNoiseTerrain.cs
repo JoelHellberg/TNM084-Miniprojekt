@@ -9,7 +9,7 @@ using UnityEngine.UIElements;
 public class PerlinNoiseTerrain : MonoBehaviour
 {
 
-    //Get slider for days without water
+    //Get value from slider for days without water
     public UnityEngine.UI.Slider waterSlider;
 
     public float daysWithoutWater;
@@ -63,8 +63,8 @@ public class PerlinNoiseTerrain : MonoBehaviour
         }
 
 
-        //0->Ljus
-        //1->Mörkt
+        //0->Light
+        //1->Dark
         if (daysWithoutWater <= 0)
         {
             material.SetFloat("_Metallic", metallicValue);
