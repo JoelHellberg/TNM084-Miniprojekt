@@ -1776,8 +1776,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pot: {fileID: 649494624}
-  stemPrefab: {fileID: 7139241531217849928, guid: 392215b6d8e443f41b128facf1e77ff0, type: 3}
-  branchPrefab: {fileID: 4039941718830027394, guid: 4455c01158e36a34b9d27e5bcdba4df2, type: 3}
+  stemPrefab: {fileID: 3335353941828001579, guid: 9ff2cb3297206c54093e4f62421d0989, type: 3}
+  branchPrefab: {fileID: 1761578857207897940, guid: cd2f4b2ebfc8f8046a3edc17d83d01b6, type: 3}
   leafPrefab: {fileID: 6394047432692804472, guid: 3f33fe3803219484daab4f81adef8acc, type: 3}
   daysLivedSlider: {fileID: 1214401229}
   waterSlider: {fileID: 1000139665}
