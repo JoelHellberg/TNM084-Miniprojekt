@@ -130,6 +130,11 @@ public class CustomPlant : MonoBehaviour
     private float scaleMax = 0.8f;
     private float scaleMin = 0.6f;
 
+    private float leafProbability = 1.0f;
+
+    private float waterRatio = 1.0f;
+    private float daysRatio = 1.0f;
+
     public CustomPlant(GameObject stemPrefab_in, GameObject branchPrefab_in, GameObject leafPrefab_in, GameObject pot_in)
     {
         stemPrefab = stemPrefab_in;
@@ -139,18 +144,29 @@ public class CustomPlant : MonoBehaviour
         createPlant();
     }
 
-    public void updateRotation(float daysWithoutWater)
+    public void updateRotation(float waterRatio_in)
     {
-        float rotationImpact = 80.0f * (daysWithoutWater / 62.0f);
+        waterRatio = waterRatio_in;
+        float rotationImpact = 80.0f * waterRatio;
         rotationMax = Mathf.Round((60.0f + rotationImpact) * 10f) / 10f;
         rotationMin = Mathf.Round((20.0f + rotationImpact) * 10f) / 10f;
+        updateLeafProb();
     }
 
-    public void updateScale(float daysLived)
+    public void updateScale(float daysRatio_in)
     {
-        float scaleImpact = 0.6f * (daysLived / 365.0f);
+        daysRatio = daysRatio_in;
+        float scaleImpact = 0.6f * daysRatio;
         scaleMax = Mathf.Round((0.4f + scaleImpact) * 10f) / 10f;
         scaleMin = Mathf.Round((0.2f + scaleImpact) * 10f) / 10f;
+        updateLeafProb();
+    }
+
+    private void updateLeafProb() 
+    {
+        // Start the probability of leafs at 1.0 for 100% and work its way down as
+        // days since water increases
+        leafProbability = Mathf.Clamp(1.0f - waterRatio, 0.4f, 1f);
     }
 
     private void createPlant()
@@ -276,9 +292,13 @@ public class CustomPlant : MonoBehaviour
         for (int i = 0; i < branches.Count; i++)
         {
             int leavesPerBranch = UnityEngine.Random.Range(5, 8);
+            float degreesToIncrease = 360 / leavesPerBranch;
             for (int j = 0; j < leavesPerBranch; j++) {
-                    
-                    float degreesToIncrease = 360 / leavesPerBranch;
+                // Generate a random value between 0.0 and 1.0
+                float randomValue = Random.value;
+
+                // Only create a leaf if the random value is less than or equal to the probability
+                if (randomValue <= leafProbability) { 
                     GameObject leafObj = Instantiate(leafPrefab);
                     Vector3 currentScale = leafObj.transform.localScale;
                     float branchScale = branches[i].getScale();
@@ -288,22 +308,23 @@ public class CustomPlant : MonoBehaviour
                         currentScale.z * branchScale * UnityEngine.Random.Range(0.8f, 1.0f)
                     );
 
-                // Define the two rotation vectors
-                Vector3 angleOfLeaf = new Vector3(0.0f, degreesToIncrease * j, 0.0f); // In degrees
-                    Vector3 angleOfBranch = branches[i].rotation;
+                    // Define the two rotation vectors
+                    Vector3 angleOfLeaf = new Vector3(0.0f, degreesToIncrease * j, 0.0f); // In degrees
+                        Vector3 angleOfBranch = branches[i].rotation;
 
-                    // Apply the angle of the branch on the angle of the Leaf
-                    Quaternion combinedRotation = Quaternion.Euler(angleOfLeaf) * Quaternion.Euler(angleOfBranch);
+                        // Apply the angle of the branch on the angle of the Leaf
+                        Quaternion combinedRotation = Quaternion.Euler(angleOfLeaf) * Quaternion.Euler(angleOfBranch);
 
-                    // Get the resulting rotation as a vector (if needed)
-                    Vector3 resultEulerAngles = combinedRotation.eulerAngles;
+                        // Get the resulting rotation as a vector (if needed)
+                        Vector3 resultEulerAngles = combinedRotation.eulerAngles;
 
-                    leafObj.transform.Rotate(angleOfBranch);
-                    leafObj.transform.Rotate(resultEulerAngles);
+                        leafObj.transform.Rotate(angleOfBranch);
+                        leafObj.transform.Rotate(resultEulerAngles);
 
-                    leafObj.transform.position = branches[i].getTopPos();
-                    leafs.Add(leafObj);
-                }
+                        leafObj.transform.position = branches[i].getTopPos();
+                        leafs.Add(leafObj);
+                    }
+            }
         }
         
     }

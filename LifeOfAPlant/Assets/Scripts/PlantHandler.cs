@@ -36,8 +36,11 @@ public class PlantHandler : MonoBehaviour
 
     void UpdateLifeTime(float val)
     {
-        float daysValue = daysLivedSlider.value;
-        ourPlant.updateScale(daysValue);
+        float daysLived = daysLivedSlider.value;
+        if (daysLived < waterSlider.value) { waterSlider.value = daysLived; }
+
+        float daysRatio = daysLived / daysLivedSlider.maxValue;
+        ourPlant.updateScale(daysRatio);
         ourPlant.updatePlant();
     }
 
@@ -47,10 +50,12 @@ public class PlantHandler : MonoBehaviour
         if(daysLivedSlider.value < waterValue) { daysLivedSlider.value = waterValue; }
 
         UpdateLeafColor(waterValue);
-        ourPlant.updateRotation(waterValue);
+        float waterRatio = waterValue / waterSlider.maxValue;
+        ourPlant.updateRotation(waterRatio);
         ourPlant.updatePlant();
     }
 
+    // Change the leaf's material color depending on the water status
     void UpdateLeafColor(float daysSinceWater)
     {
         float waterSliderMax = waterSlider.maxValue;
@@ -61,7 +66,7 @@ public class PlantHandler : MonoBehaviour
         Color brownColor = new Color(139 / 255f, 69 / 255f, 19 / 255f);
 
         Color resultingColor;
-
+        // Slowly fade the color from green to yellow
         if (daysSinceWater <= waterSliderMax / 2)
         {
             float halfway = waterSliderMax / 2;
@@ -70,6 +75,7 @@ public class PlantHandler : MonoBehaviour
                 (greenColor * (halfway - daysSinceWater) / halfway) +
                 (yellowColor * daysSinceWater / halfway);
         }
+        // Slowly fade the color from yellow to brown
         else
         {
             resultingColor =
