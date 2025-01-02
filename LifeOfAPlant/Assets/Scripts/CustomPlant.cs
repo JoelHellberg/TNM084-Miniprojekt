@@ -166,7 +166,7 @@ public class CustomPlant : MonoBehaviour
     {
         // Start the probability of leafs at 1.0 for 100% and work its way down as
         // days since water increases
-        leafProbability = Mathf.Clamp(1.0f - waterRatio, 0.4f, 1f);
+        leafProbability = Mathf.Clamp(1.0f - waterRatio, 0.2f, 1f);
     }
 
     private void createPlant()
