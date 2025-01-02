@@ -144,6 +144,10 @@ public class CustomPlant : MonoBehaviour
         createPlant();
     }
 
+    ~CustomPlant()
+    {
+    }
+
     public void updateRotation(float waterRatio_in)
     {
         waterRatio = waterRatio_in;
