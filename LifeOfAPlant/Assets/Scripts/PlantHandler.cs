@@ -36,16 +36,18 @@ public class PlantHandler : MonoBehaviour
 
     void UpdateLifeTime(float val)
     {
-        float floatValue = daysLivedSlider.value;
-        ourPlant.updateScale(floatValue);
+        float daysValue = daysLivedSlider.value;
+        ourPlant.updateScale(daysValue);
         ourPlant.updatePlant();
     }
 
     void UpdateWaterStatus(float val)
     {
-        float floatValue = waterSlider.value;
-        UpdateLeafColor(floatValue);
-        ourPlant.updateRotation(floatValue);
+        float waterValue = waterSlider.value;
+        if(daysLivedSlider.value < waterValue) { daysLivedSlider.value = waterValue; }
+
+        UpdateLeafColor(waterValue);
+        ourPlant.updateRotation(waterValue);
         ourPlant.updatePlant();
     }
 
