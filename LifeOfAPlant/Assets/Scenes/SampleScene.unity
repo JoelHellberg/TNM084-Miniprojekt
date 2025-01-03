@@ -3405,6 +3405,7 @@ GameObject:
   - component: {fileID: 2006903166}
   - component: {fileID: 2006903168}
   - component: {fileID: 2006903167}
+  - component: {fileID: 2006903169}
   m_Layer: 5
   m_Name: ShutDownInstructions
   m_TagString: Untagged
@@ -3528,6 +3529,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2006903165}
   m_CullTransparentMesh: 1
+--- !u!114 &2006903169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2006903165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6810adbdca027745bb338d0b4cdc3a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textMeshPro: {fileID: 2006903167}
+  fadeDuration: 1
 --- !u!1 &2042548815
 GameObject:
   m_ObjectHideFlags: 0
