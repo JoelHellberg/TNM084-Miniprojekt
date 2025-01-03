@@ -1,10 +1,12 @@
 using System.Collections.Generic;
+using TreeEditor;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 class Branch : MonoBehaviour
 {
     // Constructor class of a branch
-    public Branch(GameObject gameObject_in, int parentPos_in, string branchType)
+    public void Initialize(GameObject gameObject_in, int parentPos_in, string branchType)
     {
         branchObject = gameObject_in;
         originalScale = gameObject_in.transform.localScale;
@@ -26,10 +28,12 @@ class Branch : MonoBehaviour
         direction = new Vector3(1, randomYValue, 0);
     }
 
-    public void Remove()
+    ~Branch()
     {
-        Destroy(branchObject);
+        this.delete();
     }
+
+    public void delete() { Destroy(branchObject); }
 
     // Return how tall the object is
     public float getHeight() { return originalHeight * scale; }
@@ -135,7 +139,7 @@ public class CustomPlant : MonoBehaviour
     private float waterRatio = 1.0f;
     private float daysRatio = 1.0f;
 
-    public CustomPlant(GameObject stemPrefab_in, GameObject branchPrefab_in, GameObject leafPrefab_in, GameObject pot_in)
+    public void Initialize(GameObject stemPrefab_in, GameObject branchPrefab_in, GameObject leafPrefab_in, GameObject pot_in)
     {
         stemPrefab = stemPrefab_in;
         branchPrefab = branchPrefab_in;
@@ -146,6 +150,23 @@ public class CustomPlant : MonoBehaviour
 
     ~CustomPlant()
     {
+        this.delete();
+    }
+
+    public void delete()
+    {
+        foreach (GameObject leaf in leafs)
+        {
+            Destroy(leaf);
+        }
+        leafs.Clear();
+
+        foreach (Branch branch in branches)
+        {
+            Destroy(branch);
+            branch.delete();
+        }
+        branches.Clear();
     }
 
     public void updateRotation(float waterRatio_in)
@@ -193,7 +214,11 @@ public class CustomPlant : MonoBehaviour
 
         // Instantiate the stem of the tree
         GameObject stem = Instantiate(stemPrefab, potCenter, pot.transform.rotation);
-        Branch stemBranch = new Branch(stem, -1, "default");
+
+        // Necessary process for creating a new instance since we are using Mono Behaviour
+        Branch stemBranch = new GameObject("Branch").AddComponent<Branch>();
+        stemBranch.Initialize(stem, -1, "default");
+        Destroy(stemBranch.gameObject);
 
         float scale = UnityEngine.Random.Range(scaleMin, scaleMax);
         stemBranch.scaleBranch(scale);
@@ -217,7 +242,11 @@ public class CustomPlant : MonoBehaviour
     {
         if (parentIndex > 0) { branches[parentIndex].addChild(); }
         GameObject branchObj = Instantiate(branchPrefab);
-        Branch branchDummy = new Branch(branchObj, parentIndex, "default");
+
+        // Necessary process for creating a new instance since we are using Mono Behaviour
+        Branch branchDummy = new GameObject("Branch").AddComponent<Branch>();
+        branchDummy.Initialize(branchObj, parentIndex, "default");
+        Destroy(branchDummy.gameObject);
 
         float angle = UnityEngine.Random.Range(rotationMin, rotationMax);
         branchDummy.rotateBranch(angle);

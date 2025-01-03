@@ -20,18 +20,38 @@ public class PlantHandler : MonoBehaviour
 
     public UnityEngine.UI.Slider daysLivedSlider;
     public UnityEngine.UI.Slider waterSlider;
+    public UnityEngine.UI.Button regenerateButton;
 
     private CustomPlant ourPlant;
     
     private void Start()
     {
-        ourPlant = new CustomPlant(stemPrefab, branchPrefab, leafPrefab, pot);
+        // Necessary process for creating a new instance since we are using Mono Behaviour
+        ourPlant = new GameObject("Plant").AddComponent<CustomPlant>();
+        ourPlant.Initialize(stemPrefab, branchPrefab, leafPrefab, pot);
+        Destroy(ourPlant.gameObject);
 
         UpdateLifeTime(daysLivedSlider.value);
         daysLivedSlider.onValueChanged.AddListener(UpdateLifeTime);
 
         UpdateWaterStatus(waterSlider.value);
         waterSlider.onValueChanged.AddListener(UpdateWaterStatus);
+
+        regenerateButton.onClick.AddListener(RegeneratePlant);
+    }
+
+    void RegeneratePlant()
+    {
+        ourPlant.delete();
+
+        // Necessary process for creating a new instance since we are using Mono Behaviour
+        ourPlant = new GameObject("Plant").AddComponent<CustomPlant>();
+        ourPlant.Initialize(stemPrefab, branchPrefab, leafPrefab, pot);
+        Destroy(ourPlant.gameObject);
+
+        ourPlant.updatePlant();
+        UpdateLifeTime(0);
+        UpdateWaterStatus(0);
     }
 
     void UpdateLifeTime(float val)

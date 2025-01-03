@@ -30,26 +30,28 @@ public class PerlinNoiseTerrain : MonoBehaviour
     {
 
 
-        Debug.Log("Hej");
+        // Debug.Log("Hej");
 
         //Log value from the slider (Test-phase)
         if (waterSlider != null)
         {
             daysWithoutWater = waterSlider.value;
-            Debug.Log("Initial Watercounter: " + daysWithoutWater);
+            // Debug.Log("Initial Watercounter: " + daysWithoutWater);
         }
         else
         {
-            Debug.LogError("WaterSlider is not assigned in the Inspector!");
+            // Debug.LogError("WaterSlider is not assigned in the Inspector!");
         }
 
-        Debug.Log("Metallic Value: " + metallicValue);
+        // Alter the terrain when the value on the waterSlider changes
+        UpdateTerrain(waterSlider.value);
+        waterSlider.onValueChanged.AddListener(UpdateTerrain);
+
+        // Debug.Log("Metallic Value: " + metallicValue);
     }
 
-    //Update real-time
-    void Update()
+    void UpdateTerrain(float val)
     {
-
         Terrain terrain = GetComponent<Terrain>();
 
 
@@ -59,7 +61,7 @@ public class PerlinNoiseTerrain : MonoBehaviour
         if (waterSlider != null)
         {
             daysWithoutWater = waterSlider.value;
-           // Debug.Log("Current Watercounter: " + daysWithoutWater);
+            // Debug.Log("Current Watercounter: " + daysWithoutWater);
         }
 
 
@@ -71,13 +73,12 @@ public class PerlinNoiseTerrain : MonoBehaviour
         }
         else
         {
-            float adjustedValue = metallicValue / (daysWithoutWater/30); // Mjukare skalning
+            float adjustedValue = metallicValue / (daysWithoutWater / 30); // Mjukare skalning
             adjustedValue = Mathf.Clamp(adjustedValue, 0.05f, 2f); // Begränsar värdet mellan 0.1 och 1
             material.SetFloat("_Metallic", adjustedValue);
         }
 
-        Debug.Log("Metallic Value: " + metallicValue);
-
+        //Debug.Log("Metallic Value: " + metallicValue);
     }
 
     TerrainData GenerateTerrain(TerrainData terrainData)

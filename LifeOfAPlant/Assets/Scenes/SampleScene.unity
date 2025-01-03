@@ -3021,6 +3021,7 @@ MonoBehaviour:
   leafMaterial: {fileID: 2100000, guid: 23f02ae2f5586ae4394a2e63ad1754fa, type: 2}
   daysLivedSlider: {fileID: 1214401229}
   waterSlider: {fileID: 1000139665}
+  regenerateButton: {fileID: 1492030507}
 --- !u!65 &1608449597
 BoxCollider:
   m_ObjectHideFlags: 0
