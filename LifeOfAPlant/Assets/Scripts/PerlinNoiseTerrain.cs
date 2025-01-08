@@ -97,8 +97,9 @@ public class PerlinNoiseTerrain : MonoBehaviour
     //2D- float array
     float[,] GenerateHeights()
     {
-        //Size of array, grid of floats
+        //Size of array, grid of floats, 32x32
         float[,] heights = new float[width, height];
+
 
         for(int x = 0; x < width; x++)
         {
@@ -143,6 +144,7 @@ public class PerlinNoiseTerrain : MonoBehaviour
 
     float CalculatePerlinNoise(float x, float y)
     {
+        //"Random" pattern
         int[] permutation = {
         151, 160, 137, 91, 90, 15, 131, 13, 201, 95, 96, 53, 194, 233, 7, 225, 140,
         36, 103, 30, 69, 142, 8, 99, 37, 240, 21, 10, 23, 190, 6, 148, 247, 120, 234,
@@ -162,8 +164,10 @@ public class PerlinNoiseTerrain : MonoBehaviour
         61, 156, 180
          };
 
+        
         int[] p;
         p = new int[512];
+    
 
         for (int i = 0; i < 256; i++)
         {
