@@ -9,14 +9,14 @@ using UnityEngine.UIElements;
 public class PerlinNoiseTerrain : MonoBehaviour
 {
 
-    //Get value from slider for days without water
+    //Hämta slidern
     public UnityEngine.UI.Slider waterSlider;
 
     public float daysWithoutWater;
 
-    public float depth = 20;
+    public float depth = 20; 
 
-    public float scaleFactor = 0.2f; // Lägre värden minskar höjden
+    public float scaleFactor = 0.2f;
 
     public Material material;
 
@@ -29,18 +29,15 @@ public class PerlinNoiseTerrain : MonoBehaviour
     private void Start()
     {
 
-
-        // Debug.Log("Hej");
-
-        //Log value from the slider (Test-phase)
+        //Förhindra för error
         if (waterSlider != null)
         {
+            //Hämta värde från slidern för days without water
             daysWithoutWater = waterSlider.value;
-            // Debug.Log("Initial Watercounter: " + daysWithoutWater);
         }
         else
         {
-            // Debug.LogError("WaterSlider is not assigned in the Inspector!");
+            Debug.LogError("WaterSlider is not assigned in the Inspector!");
         }
 
         // Alter the terrain when the value on the waterSlider changes
@@ -50,8 +47,12 @@ public class PerlinNoiseTerrain : MonoBehaviour
         // Debug.Log("Metallic Value: " + metallicValue);
     }
 
+    
+    //Uppdatera terrängen med värdet från slidern
+    //Ändrar terrängen och ytans material
     void UpdateTerrain(float val)
     {
+        //Skapa terrängen
         Terrain terrain = GetComponent<Terrain>();
 
 
@@ -67,45 +68,52 @@ public class PerlinNoiseTerrain : MonoBehaviour
 
         //0->Light
         //1->Dark
+
+        //Ändra ytans färg för att visualisera torr och blöt jord
         if (daysWithoutWater <= 0)
         {
             material.SetFloat("_Metallic", metallicValue);
         }
         else
         {
-            float adjustedValue = metallicValue / (daysWithoutWater / 30); // Mjukare skalning
-            adjustedValue = Mathf.Clamp(adjustedValue, 0.05f, 2f); // Begränsar värdet mellan 0.1 och 1
+            float adjustedValue = metallicValue / (daysWithoutWater / 30); //Skala värdet beroende på sliderns värde
+            adjustedValue = Mathf.Clamp(adjustedValue, 0.05f, 2f); // Begränsar värdet mellan 0.o5 och 2
             material.SetFloat("_Metallic", adjustedValue);
         }
 
         //Debug.Log("Metallic Value: " + metallicValue);
     }
 
+
+    //Generera terrängen
     TerrainData GenerateTerrain(TerrainData terrainData)
     {
 
         terrainData.heightmapResolution = width + 1 ;
 
+        //Terrängens storlek
         terrainData.size = new Vector3(width, depth, height);
 
+        //Terrängens höjdkarta
         terrainData.SetHeights(0, 0, GenerateHeights());
 
         return terrainData; 
 
     }
 
-    //2D- float array
+    //Skapar en 2-dimensionell array, ger höjden som används i terängen höjdkarta
     float[,] GenerateHeights()
     {
-        //Size of array, grid of floats, 32x32
+        //Arrayems storlek, definieras i unity (32x32 för tillfället)
         float[,] heights = new float[width, height];
 
 
+        //Går igenom alla punkter i terrängen
         for(int x = 0; x < width; x++)
         {
             for(int y =  0; y < height; y++)
             {
-                //Perlin noise value
+                //Ger höjden för en punkt i terrängen, beräknas av Calculateheight()
                 heights[x, y] = CalculateHeight(x,y);
             }
         }
@@ -118,30 +126,35 @@ public class PerlinNoiseTerrain : MonoBehaviour
 
     float CalculateHeight(int x, int y)
     {
+        //Värde är finjusterade för det specifikt önskade resulatet 
         float total = 0;
-        float amplitude = 1;
+        float amplitude = 1; //Hur mycket varje lagar bidrar
+        float lacunarity = 2;
         float frequency = daysWithoutWater/50f;
         int octaves = 4; // Antal lager av Perlin Noise
-        float persistence = 0.5f; // Hur mycket varje lager bidrar
+        float persistence = 0.5f; // Hur mycket varje lager bidrar, sänker påverkan för varje lager
+
 
         for (int i = 0; i < octaves; i++)
         {
+
+            //Normalisera
             float xCoord = (float)x / width * frequency;
             float yCoord = (float)y / height * frequency;
 
-            // Lägg till varje lager av Perlin Noise
+            // Lägg till varje lager av Perlin Noise, amplituden gör att vajre lager påverkar olika
             total += CalculatePerlinNoise(xCoord, yCoord) * amplitude;
 
             amplitude *= persistence; // Minskande bidrag för varje lager
-            frequency *= 2;           // Dubblar frekvensen för varje lager
+            frequency *= lacunarity; // Dubblar frekvensen för varje lager
         }
 
-        // Normalisera värdet och justera skalan
+        // Normalisera värdet (Blev knas om jag inte använder Clamp)
         return Mathf.Clamp(total, 0f, 1f) * scaleFactor;
     }
 
 
-
+    //Beräkna Perlin Noise från vajre punkt (Inspo från labbarna)
     float CalculatePerlinNoise(float x, float y)
     {
         //"Random" pattern
@@ -184,8 +197,8 @@ public class PerlinNoiseTerrain : MonoBehaviour
         float yf = y - Mathf.Floor(y);
 
         // Beräkna fade-kurvor för interpolering
-        float u = Fade(xf);
-        float v = Fade(yf);
+        float u = xf;
+        float v = yf;
 
         // Hitta hörnpunkter
         int aa = p[p[xi] + yi];
@@ -193,7 +206,7 @@ public class PerlinNoiseTerrain : MonoBehaviour
         int ba = p[p[xi + 1] + yi];
         int bb = p[p[xi + 1] + yi + 1];
 
-        // Interpolera resultaten från varje hörn
+        // Interpolera resultaten från varje hörn för att få en mjuk terräng
         float x1 = Mathf.Lerp(Grad(aa, xf, yf), Grad(ba, xf - 1, yf), u);
         float x2 = Mathf.Lerp(Grad(ab, xf, yf - 1), Grad(bb, xf - 1, yf - 1), u);
         return Mathf.Clamp(Mathf.Lerp(x1, x2, v), 0f, 1f);
@@ -203,11 +216,13 @@ public class PerlinNoiseTerrain : MonoBehaviour
 
 
 
+    //Bättre övergång
     private static float Fade(float t)
     {
         return t * t * t * (t * (t * 6 - 15) + 10);
     }
 
+    //Beräkna gradienterna, skapar mjukare övergångar
     private static float Grad(int hash, float x, float y)
     {
         int h = hash & 3;
