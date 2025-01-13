@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using TreeEditor;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 class Branch : MonoBehaviour
 {

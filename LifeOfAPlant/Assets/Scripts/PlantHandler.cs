@@ -1,13 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
-using TMPro;
-using Palmmedia.ReportGenerator.Core.Parser.Analysis;
-using static UnityEditor.Progress;
-using UnityEditor.Experimental.GraphView;
 
 public class PlantHandler : MonoBehaviour
 {
